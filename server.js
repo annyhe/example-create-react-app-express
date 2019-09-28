@@ -70,7 +70,7 @@ app.post('/api/world', (req, res) => {
             if (error) {
                 console.log(error)
             } else {
-                res.send("# of Row Changes: " + this.changes + ". ID: " + this.id)
+                res.send("# of Row Changes: " + this.changes)
             }
         });        
     }
