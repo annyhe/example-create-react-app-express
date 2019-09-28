@@ -41,6 +41,7 @@ const jackets = [
     // orange elie tahari
     'https://di2ponv0v5otw.cloudfront.net/posts/2019/08/01/5d43c80210f00fe40b175461/m_5d43ce9a79df2723cf6ace12.jpg',
 ]
+
 const dresses = [
     // elie tahari linen dress
     'https://dtpmhvbsmffsz.cloudfront.net/posts/2017/10/05/59d6a816620ff7d516038e5e/m_59d6a8252599fe829c037a89.jpg',

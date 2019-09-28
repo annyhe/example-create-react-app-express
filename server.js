@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const sqlite3 = require('sqlite3').verbose()
 const DB_PATH = './sqlite.db'; // ':memory:';
-// open database in memory
+
 let db = new sqlite3.Database(DB_PATH, err => {
     if (err) {
         return console.error(err.message)
@@ -18,31 +18,27 @@ let db = new sqlite3.Database(DB_PATH, err => {
     console.log('Connected to the ' + DB_PATH + ' SQlite database.')
 });
 
-dbSchema = `CREATE TABLE IF NOT EXISTS Items (
-    id integer NOT NULL PRIMARY KEY,
-    name text NOT NULL,
-    brand text NOT NULL,
-    url text NOT NULL UNIQUE,
-    type text,
-    color text
-);`
+// TODO: create schema for saved items
+// dbSchema = `CREATE TABLE IF NOT EXISTS Items (
+//     id integer NOT NULL PRIMARY KEY,
+//     name text NOT NULL,
+//     brand text NOT NULL,
+//     url text NOT NULL UNIQUE,
+//     type text,
+//     color text
+// );`
 
-db.exec(dbSchema, function(err){
-if (err) {
-    console.log(err)
-}
-});
+// db.exec(dbSchema, function(err){
+// if (err) {
+//     console.log(err)
+// }
+// });
 
 // API calls
 app.get('/api/hello', (req, res) => {
-    let sql = `SELECT PlaylistId id,
-    Name name
-  FROM playlists
-  WHERE PlaylistId  = ?`
-    let playlistId = 1
-
-    // first row only
-    db.get(sql, [playlistId], (err, row) => {
+    let sql = 'SELECT id, name, brand, url, type, color FROM Items';
+    
+    db.get(sql, [], (err, row) => {
         if (err) {
             return console.error(err.message)
         }
