@@ -55,10 +55,10 @@ const tops = [
 class PantsOrDress extends Component {
     render() {
         const _div = this.props.pantsOrDress ? (
-            <div><img class="tops" src={tops[getRandom(tops.length)]} />
-            <img class="bottoms" src={bottoms[getRandom(bottoms.length)]} /></div>
+            <div><img className="tops" src={tops[getRandom(tops.length)]} />
+            <img className="bottoms" src={bottoms[getRandom(bottoms.length)]} /></div>
         ) : (
-            <div><img class="dresses" src={dresses[getRandom(dresses.length)]} /></div>
+            <div><img className="dresses" src={dresses[getRandom(dresses.length)]} /></div>
         )
 
         return { ..._div }
@@ -79,6 +79,7 @@ class DisplayCombination extends Component {
     </div>
     }
 }
+
 export default class Closet extends Component {
     state = {
         pantsOrDress: true,
@@ -88,19 +89,24 @@ export default class Closet extends Component {
     }
     render() {
         // TODO: map urls to display component [ [urls1], [urls2] ]
-        const obj = {
-            jackets: jackets[getRandom(jackets.length)],
-            pantsOrDress: this.state.pantsOrDress,
-            shoes: shoes[getRandom(shoes.length)],
-            handbags: handbags[getRandom(handbags.length)],
+        let renderNum = 5
+        const arr = []
+        let counter = renderNum;
+        while (counter > 0) {
+            arr.push({
+                jackets: jackets[getRandom(jackets.length)],
+                pantsOrDress: this.state.pantsOrDress,
+                shoes: shoes[getRandom(shoes.length)],
+                handbags: handbags[getRandom(handbags.length)],
+            });
+            counter -= 1;
         }
-    
+        console.log(arr)
         return (
             <div>
                 <h1>Closet idea generation</h1>
                 <button onClick={this.togglePantsOrDress}>Change to {!this.state.pantsOrDress ? 'top and pants' : 'dress'}</button>
-
-                <DisplayCombination {...obj}/>
+                {arr.map((obj, index) => <DisplayCombination key={index} {...obj}/>)}
             </div>
         )
     }
