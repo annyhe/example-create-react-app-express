@@ -41,14 +41,13 @@ class App extends Component {
     return body;
   };
 
-  handleSubmit = async e => {
-    e.preventDefault();
+  handleSubmit = async (outfitID, bool) => {
     const response = await fetch("/api/world", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ post: this.state.post })
+      body: JSON.stringify({ id: outfitID, isFavorite: bool })
     });
     const body = await response.text();
 
@@ -58,9 +57,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <button onClick={this.handleSubmit}>POST</button>
         {this.state.responseToPost}
-        <Closet {...this.state.response} renderNum={5} />
+        <Closet {...this.state.response} renderNum={5} handleSubmit={this.handleSubmit}/>
       </div>
     );
   }

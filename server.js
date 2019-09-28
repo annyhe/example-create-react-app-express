@@ -39,7 +39,6 @@ app.get('/api/hello', (req, res) => {
     db.serialize(function() {
         // let sql = 'SELECT id, name, brand, url, type, color FROM Items';
         db.all("SELECT * FROM Items", function(err, allRows) {
-
             if(err != null){
                 console.log(err);
             }
@@ -63,7 +62,7 @@ app.get('/api/hello', (req, res) => {
 app.post('/api/world', (req, res) => {
     console.log(req.body)
     res.send(
-        `I received your POST request. This is what you sent me: ${req.body.post}`
+        `I received your POST request. This is what you sent me: ${JSON.stringify(req.body)}`
     )
 })
 

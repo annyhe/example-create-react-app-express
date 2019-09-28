@@ -7,7 +7,6 @@ function getRandom(endsAt) {
     return Math.floor(Math.random() * endsAt)
 }
 const DELIMITER = '#'
-const NUM_TO_RENDER = 5
 
 class PantsOrDress extends Component {
     render() {
@@ -41,12 +40,12 @@ class DisplayCombination extends Component {
         let heartClass = 'heart'
         if (isFavorite) heartClass += ' active'
         return (
-            <div className={'imageContainer ' + name}>
+            <div className='imageContainer'>
                 <img className="jacket" src={jacket} />
                 {children}
                 <img className="shoes" src={shoes} />
                 <img className="handbag" src={handbag} />
-                <button onClick={toggleFavorite} className={heartClass}>
+                <button onClick={toggleFavorite} data-id={name} className={heartClass}>
                     &#9829;
                 </button>
             </div>
@@ -69,16 +68,15 @@ export default class Closet extends Component {
         }
     }
     refreshItems = () => {
-        const { jacket, shoes, handbag, top, bottom, dress } = this.props
-        const arr = []
-        // TODO: refactor this to fill up empty array with obj
-        let counter = NUM_TO_RENDER
+        const { jacket, shoes, handbag, top, bottom, dress, renderNum } = this.props;
+        const arr = [];
+        let counter = renderNum;
         if (!jacket) {
-            return
+            return;
         }
         const copyFavorites = JSON.parse(
             JSON.stringify(this.state.favoritesObj)
-        )
+        );
         while (counter > 0) {
             const _jacket = jacket[getRandom(jacket.length)]
             const _shoes = shoes[getRandom(shoes.length)]
@@ -118,11 +116,12 @@ export default class Closet extends Component {
         this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
     toggleFavorite = e => {
-        const id = e.target.parentNode.className.split(' ')[1]
+        const id = e.target.dataset.id;
         const copyFavorites = JSON.parse(
             JSON.stringify(this.state.favoritesObj)
         )
         copyFavorites[id] = !copyFavorites[id]
+        this.props.handleSubmit(id, copyFavorites[id])
         this.setState({ favoritesObj: copyFavorites })
     }
     render() {
