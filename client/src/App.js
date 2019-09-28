@@ -27,7 +27,7 @@ class App extends Component {
         response: {},
         post: '',
         responseToPost: '',
-        favorites: [],
+        favorites: {}, // {combination1: true, comb2: true, ...}
     }
     componentDidMount() {
         Promise.all([
@@ -35,22 +35,21 @@ class App extends Component {
             this.callApi('/api/favorites'),
         ])
             .then(([one, two]) => {
-                console.log(JSON.stringify(two.favorites))
                 // TODO: show UI message: no records returned
                 if (!one.express) return
                 const obj = groupArrByType(one.express)
-                this.setState({ response: obj, favorites: two.favorites })
+                const favorites = {}
+                two.favorites.forEach((obj) => favorites[obj.combination] = true)
+                this.setState({ response: obj, favorites })
             })
             .catch(err => console.log(err))
     }
 
     callApi = async url => {
-        const response = await fetch(url)
-        const body = await response.json()
-
-        if (response.status !== 200) throw Error(body.message)
-
-        return body
+        const response = await fetch(url);
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
     }
 
     handleSubmit = async (outfitID, bool) => {
@@ -60,17 +59,34 @@ class App extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ id: outfitID, isFavorite: bool }),
-        })
-        const body = await response.text()
+        });
 
+        const body = await response.text()
         this.setState({ responseToPost: body })
     }
 
+    toggleFavorite = e => {
+        const id = e.target.dataset.id;
+        const copyFavorites = JSON.parse(
+            JSON.stringify(this.state.favorites)
+        )
+        // if key was in there, set to opposite, else set to true
+        if (copyFavorites.hasOwnProperty(id)) {
+            copyFavorites[id] = !copyFavorites[id]
+        } else {
+            copyFavorites[id] = true;
+        }
+
+        this.handleSubmit(id, copyFavorites[id]);
+        this.setState({ favorites: copyFavorites });
+    }
     render() {
         return (
             <div className="App">
                 {this.state.responseToPost}
                 <Closet
+                    favorites={this.state.favorites}
+                    toggleFavorite={this.toggleFavorite}
                     {...this.state.response}
                     renderNum={5}
                     handleSubmit={this.handleSubmit}

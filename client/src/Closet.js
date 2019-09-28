@@ -56,13 +56,14 @@ class DisplayCombination extends Component {
 export default class Closet extends Component {
     state = {
         pantsOrDress: true,
-        arr: [],
-        favoritesObj: {},
+        arr: []
     }
     componentDidUpdate(prevProps, prevState) {
         if (
             (this.props.jacket !== prevProps.jacket && this.props.jacket) ||
-            this.state.pantsOrDress != prevState.pantsOrDress
+            this.state.pantsOrDress != prevState.pantsOrDress 
+            // how to compare arrays?
+            // this.props.favorites !== prevProps.favorites
         ) {
             this.refreshItems()
         }
@@ -74,9 +75,7 @@ export default class Closet extends Component {
         if (!jacket) {
             return;
         }
-        const copyFavorites = JSON.parse(
-            JSON.stringify(this.state.favoritesObj)
-        );
+        
         while (counter > 0) {
             const _jacket = jacket[getRandom(jacket.length)]
             const _shoes = shoes[getRandom(shoes.length)]
@@ -106,24 +105,20 @@ export default class Closet extends Component {
                 obj.id += _dress.id
             }
 
-            arr.push(obj)
-            copyFavorites[obj.id] = false
-            counter -= 1
+            // only push and increment iff combination is not in favorites
+            const results = Object.keys(this.props.favorites).filter((key) => key === obj.id);
+            if (!results.length) {
+                arr.push(obj);            
+                counter -= 1;    
+            }
         }
-        this.setState({ arr: arr, favoritesObj: copyFavorites })
+
+        this.setState({ arr: arr})
     }
     togglePantsOrDress = () => {
         this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
-    toggleFavorite = e => {
-        const id = e.target.dataset.id;
-        const copyFavorites = JSON.parse(
-            JSON.stringify(this.state.favoritesObj)
-        )
-        copyFavorites[id] = !copyFavorites[id]
-        this.props.handleSubmit(id, copyFavorites[id])
-        this.setState({ favoritesObj: copyFavorites })
-    }
+
     render() {
         return (
             <div>
@@ -136,11 +131,11 @@ export default class Closet extends Component {
                 </p>
                 {this.state.arr.map((obj, index) => (
                     <DisplayCombination
-                        isFavorite={this.state.favoritesObj[obj.id]}
+                        isFavorite={this.props.favorites[obj.id]}
                         name={obj.id}
                         key={index}
                         {...obj}
-                        toggleFavorite={this.toggleFavorite}
+                        toggleFavorite={this.props.toggleFavorite}
                     >
                         <PantsOrDress
                             top={obj.top}

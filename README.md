@@ -1,4 +1,8 @@
 # create-react-app React Project with Node Express Backend
+tests
+- move favorites up to App from Closet
+- favorites should not be displayed, unless on the favorites page/by the favorites component
+- onclick heart shoud add the comboID to the 'favorite' state on App
 
 > Example on using create-react-app with a Node Express Backend
 
