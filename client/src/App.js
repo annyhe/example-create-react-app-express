@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import './App.css'
 import Closet from './Closet'
+import DisplayCombination from './DisplayCombination'
+import PantsOrDress from './PantsOrDress'
+const DELIMITER = '#'
 
 function groupArrByType(arr) {
     const obj = {}
@@ -15,13 +18,63 @@ function groupArrByType(arr) {
     return obj
 }
 
-// // given all clothing items and favorites, render favorites
-// class Favorites extends Component() {
-//     render() {
-//         // [{"id":1,"combination":"14#1#9#16#7"},{"id":2,"combination":"13#1#10#17#5"},{"id":3,"combination":"12#4#9#16#7"},{"id":5,"combination":"12#4#9#17#5"},{"id":6,"combination":"14#2#10#16#7"},{"id":7,"combination":"13#2#9#16#7"}]
-//         return <div>hello</div>
-//     }
-// }
+// given all clothing items and favorites, render favorites
+const FavoriteContainer = props => {
+    return (
+        <div>
+            {Object.keys(props.favorites).map((key, index) => {
+                const itemIndexes = key.split(DELIMITER)
+                const _jacket = props.jacket.filter(
+                    obj => obj.id === parseInt(itemIndexes[0])
+                )[0]
+                const _shoes = props.shoes.filter(
+                    obj => obj.id === parseInt(itemIndexes[1])
+                )[0]
+                const _handbag = props.handbag.filter(
+                    obj => obj.id === parseInt(itemIndexes[2])
+                )[0]
+                const obj = {
+                    jacket: _jacket.url,
+                    shoes: _shoes.url,
+                    handbag: _handbag.url,
+                }
+                if (itemIndexes.length > 4) {
+                    let _top = props.top.filter(
+                        obj => obj.id === parseInt(itemIndexes[3])
+                    )[0]
+                    let _bottom = props.bottom.filter(
+                        obj => obj.id === parseInt(itemIndexes[4])
+                    )[0]
+                    obj.top = _top.url
+                    obj.bottom = _bottom.url
+                } else {
+                    let _dress = props.dress.filter(
+                        obj => obj.id === parseInt(itemIndexes[3])
+                    )[0]
+                    obj.dress = _dress.url
+                }
+                return (
+                    <div key={index}>
+                        {key}
+                        <DisplayCombination
+                            {...obj}
+                            isFavorite={true}
+                            name={key}
+                            toggleFavorite={props.toggleFavorite}
+                        >
+                            <PantsOrDress
+                                top={obj.top}
+                                bottom={obj.bottom}
+                                dress={obj.dress}
+                            />
+                        </DisplayCombination>
+                    </div>
+                )
+            })}
+        </div>
+    )
+}
+
 class App extends Component {
     state = {
         response: {},
@@ -39,17 +92,19 @@ class App extends Component {
                 if (!one.express) return
                 const obj = groupArrByType(one.express)
                 const favorites = {}
-                two.favorites.forEach((obj) => favorites[obj.combination] = true)
+                two.favorites.forEach(
+                    obj => (favorites[obj.combination] = true)
+                )
                 this.setState({ response: obj, favorites })
             })
             .catch(err => console.log(err))
     }
 
     callApi = async url => {
-        const response = await fetch(url);
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        const response = await fetch(url)
+        const body = await response.json()
+        if (response.status !== 200) throw Error(body.message)
+        return body
     }
 
     handleSubmit = async (outfitID, bool) => {
@@ -59,38 +114,41 @@ class App extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ id: outfitID, isFavorite: bool }),
-        });
+        })
 
         const body = await response.text()
         this.setState({ responseToPost: body })
     }
 
     toggleFavorite = e => {
-        const id = e.target.dataset.id;
-        const copyFavorites = JSON.parse(
-            JSON.stringify(this.state.favorites)
-        )
-        // if key was in there, set to opposite, else set to true
-        if (copyFavorites.hasOwnProperty(id)) {
-            copyFavorites[id] = !copyFavorites[id]
+        const id = e.target.dataset.id
+        const copyFavorites = JSON.parse(JSON.stringify(this.state.favorites))
+        // if key was in there AND it was true, delete it, else set to true
+        if (copyFavorites.hasOwnProperty(id) && copyFavorites[id]) {
+            delete copyFavorites[id]
         } else {
-            copyFavorites[id] = true;
+            copyFavorites[id] = true
         }
 
-        this.handleSubmit(id, copyFavorites[id]);
-        this.setState({ favorites: copyFavorites });
+        this.handleSubmit(id, copyFavorites[id])
+        this.setState({ favorites: copyFavorites })
     }
     render() {
         return (
             <div className="App">
                 {this.state.responseToPost}
-                <Closet
+                <FavoriteContainer
+                    toggleFavorite={this.toggleFavorite}
+                    favorites={this.state.favorites}
+                    {...this.state.response}
+                />
+                {/* <Closet
                     favorites={this.state.favorites}
                     toggleFavorite={this.toggleFavorite}
                     {...this.state.response}
                     renderNum={5}
                     handleSubmit={this.handleSubmit}
-                />
+                /> */}
             </div>
         )
     }

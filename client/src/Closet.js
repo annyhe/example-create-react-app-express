@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import DisplayCombination from './DisplayCombination'
+import PantsOrDress from './PantsOrDress'
 import './index.css'
 
 // Integer param
@@ -7,51 +9,6 @@ function getRandom(endsAt) {
     return Math.floor(Math.random() * endsAt)
 }
 const DELIMITER = '#'
-
-class PantsOrDress extends Component {
-    render() {
-        const { top, bottom, dress } = this.props
-        const _div = top ? (
-            <div>
-                <img className="tops" src={top} />
-                <img className="bottom" src={bottom} />
-            </div>
-        ) : (
-            <div>
-                <img className="dress" src={dress} />
-            </div>
-        )
-
-        return { ..._div }
-    }
-}
-
-class DisplayCombination extends Component {
-    render() {
-        const {
-            jacket,
-            shoes,
-            handbag,
-            children,
-            name,
-            isFavorite,
-            toggleFavorite,
-        } = this.props
-        let heartClass = 'heart'
-        if (isFavorite) heartClass += ' active'
-        return (
-            <div className='imageContainer'>
-                <img className="jacket" src={jacket} />
-                {children}
-                <img className="shoes" src={shoes} />
-                <img className="handbag" src={handbag} />
-                <button onClick={toggleFavorite} data-id={name} className={heartClass}>
-                    &#9829;
-                </button>
-            </div>
-        )
-    }
-}
 
 export default class Closet extends Component {
     state = {
