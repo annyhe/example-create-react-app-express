@@ -24,6 +24,8 @@ class App extends Component {
   componentDidMount() {
     this.callApi()
       .then(res => {
+        // TODO: show UI message: no records returned
+        if (!res.express) return;
         const obj = groupArrByType(res.express)
         this.setState({ response: obj });
       })
