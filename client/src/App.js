@@ -5,15 +5,30 @@ import logo from "./logo.svg";
 import "./App.css";
 import Closet from "./Closet";
 
+function groupArrByType(arr) {
+  const obj = {};
+  arr.forEach((row) => {
+    if (obj.hasOwnProperty(row.type)) {
+      obj[row.type].push(row)
+    } else {
+      obj[row.type] = [row];
+    }
+  })
+  return obj;
+}
+
 class App extends Component {
   state = {
-    response: "",
+    response: {},
     post: "",
     responseToPost: ""
   };
   componentDidMount() {
     this.callApi()
-      .then(res => console.log(res.express))
+      .then(res => {
+        const obj = groupArrByType(res.express)
+        this.setState({ response: obj });
+      })
       .catch(err => console.log(err));
   }
 
@@ -41,9 +56,10 @@ class App extends Component {
   };
 
   render() {
+    // const {jackets, tops, bottoms, shoes, handbags} = this.state.response;
     return (
       <div className="App">
-        <Closet renderNum={5} />
+        <Closet {...this.state.response} renderNum={5} />
       </div>
     );
   }
