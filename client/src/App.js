@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 
-import logo from "./logo.svg";
-
 import "./App.css";
 import Closet from "./Closet";
 
@@ -56,7 +54,6 @@ class App extends Component {
   };
 
   render() {
-    // const {jackets, tops, bottoms, shoes, handbags} = this.state.response;
     return (
       <div className="App">
         <Closet {...this.state.response} renderNum={5} />

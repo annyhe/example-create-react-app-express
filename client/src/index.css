@@ -22,3 +22,14 @@ button {
     color: white;
     font-weight: bold;
 }
+.heart {
+    background: white;
+    color: gray;
+    font-size: 40px;
+}
+.heart:hover {
+    cursor: pointer;
+}
+.heart.active {
+    color: red;
+}

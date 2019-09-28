@@ -5,26 +5,21 @@ import './index.css'
 // returns 0 to endsAt - 1
 function getRandom(endsAt) {
     return Math.floor(Math.random() * endsAt)
-}  
+}
+const DELIMITER = '#';
+const NUM_TO_RENDER = 5;
 
-// TODO: make this more dumb: pass in the top, bottom, and dress URL
 class PantsOrDress extends Component {
     render() {
-        const { top, bottom, dress } = this.props;
-        const _div = this.props.pantsOrDress ? (
+        const { top, bottom, dress } = this.props
+        const _div = top ? (
             <div>
                 <img className="tops" src={top} />
-                <img
-                    className="bottom"
-                    src={bottom}
-                />
+                <img className="bottom" src={bottom} />
             </div>
         ) : (
             <div>
-                <img
-                    className="dress"
-                    src={dress}
-                />
+                <img className="dress" src={dress} />
             </div>
         )
 
@@ -34,14 +29,16 @@ class PantsOrDress extends Component {
 
 class DisplayCombination extends Component {
     render() {
-        const { jacket, shoes, handbag, children } = this.props
+        const { jacket, shoes, handbag, children, name, isFavorite, toggleFavorite } = this.props;
+        let heartClass = 'heart';
+        if (isFavorite) heartClass += ' active';
         return (
-            <div className="imageContainer">
+            <div className={"imageContainer " + name}>
                 <img className="jacket" src={jacket} />
                 {children}
                 <img className="shoes" src={shoes} />
                 <img className="handbag" src={handbag} />
-                <button>Save combination</button>
+                <button onClick={toggleFavorite} className={heartClass}>&#9829;</button>
             </div>
         )
     }
@@ -54,26 +51,59 @@ export default class Closet extends Component {
     togglePantsOrDress = () => {
         this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
+    toggleFavorite = (e) => {
+        console.log(e.target.parentNode.className.split(' ')[1])
+        // need the id
+        // this.setState({ pantsOrDress: !this.state.pantsOrDress })
+    }
     render() {
-        const { renderNum, jacket, shoes, handbag, top, bottom, dress } = this.props
+        const {
+            jacket,
+            shoes,
+            handbag,
+            top,
+            bottom,
+            dress,
+        } = this.props
         const arr = []
         // TODO: refactor this to fill up empty array with obj
-        let counter = renderNum
+        let counter = NUM_TO_RENDER;
         if (!jacket) {
-            return <p>Waiting</p>;
+            return <p>Waiting</p>
         }
 
         while (counter > 0) {
-            arr.push({
-                jacket: jacket[getRandom(jacket.length)].url,
-                pantsOrDress: this.state.pantsOrDress,
-                shoes: shoes[getRandom(shoes.length)].url,
-                handbag: handbag[getRandom(handbag.length)].url,
-                top: top[getRandom(top.length)].url,
-                bottom: bottom[getRandom(bottom.length)].url,
-                dress: dress[getRandom(dress.length)].url,
-            })
-            counter -= 1
+            const _jacket = jacket[getRandom(jacket.length)]
+            const _shoes = shoes[getRandom(shoes.length)]
+            const _handbag = handbag[getRandom(handbag.length)]
+            const obj = {
+                jacket: _jacket.url,
+                shoes: _shoes.url,
+                handbag: _handbag.url,
+                isFavorite: false,
+                id:
+                    _jacket.id +
+                    DELIMITER +
+                    _shoes.id +
+                    DELIMITER +
+                    _handbag.id +
+                    DELIMITER,
+            }
+
+            if (this.state.pantsOrDress) {
+                const _top = top[getRandom(top.length)]
+                const _bottom = bottom[getRandom(bottom.length)]
+                obj.top = _top.url
+                obj.bottom = _bottom.url
+                obj.id += _top.id + DELIMITER + _bottom.id;
+            } else {
+                const _dress = dress[getRandom(dress.length)]
+                obj.dress = _dress.url
+                obj.id += _dress.id;
+            }
+
+            arr.push(obj);
+            counter -= 1;
         }
 
         return (
@@ -86,11 +116,16 @@ export default class Closet extends Component {
                     </button>
                 </p>
                 {arr.map((obj, index) => (
-                    <DisplayCombination key={index} {...obj}>
-                        <PantsOrDress top={obj.top} 
-                        bottom={obj.bottom}
-                        dress={obj.dress}
-                        pantsOrDress={obj.pantsOrDress} />
+                    <DisplayCombination 
+                        name={obj.id} 
+                        key={index} {...obj}
+                        toggleFavorite={this.toggleFavorite}
+                        >
+                        <PantsOrDress
+                            top={obj.top}
+                            bottom={obj.bottom}
+                            dress={obj.dress}
+                        />
                     </DisplayCombination>
                 ))}
             </div>
