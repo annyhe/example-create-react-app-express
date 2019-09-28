@@ -18,14 +18,9 @@ let db = new sqlite3.Database(DB_PATH, err => {
     console.log('Connected to the ' + DB_PATH + ' SQlite database.')
 });
 
-// TODO: create schema for saved items
-// dbSchema = `CREATE TABLE IF NOT EXISTS Items (
+// dbSchema = `CREATE TABLE IF NOT EXISTS FavoriteItems (
 //     id integer NOT NULL PRIMARY KEY,
-//     name text NOT NULL,
-//     brand text NOT NULL,
-//     url text NOT NULL UNIQUE,
-//     type text,
-//     color text
+//     combination text NOT NULL UNIQUE
 // );`
 
 // db.exec(dbSchema, function(err){
@@ -44,26 +39,42 @@ app.get('/api/hello', (req, res) => {
             }
 
             res.send({express: allRows});
-            db.close();
         });
-    });
+    }); 
+})
 
-    db.exec('PRAGMA foreign_keys = ON;', function(error)  {
-        if (error){
-            console.error("Pragma statement didn't work.")
-        } else {
-            console.log("Foreign Key Enforcement is on.")
-        }
-    });
+app.get('/api/favorites', (req, res) => {
+    db.serialize(function() {
+        db.all("SELECT * FROM FavoriteItems", function(err, allRows) {
+            if(err != null){
+                console.log(err);
+            }
 
-    // res.send({ express: 'Hello From Express' })
+            res.send({favorites: allRows});
+        });
+    }); 
 })
 
 app.post('/api/world', (req, res) => {
     console.log(req.body)
-    res.send(
-        `I received your POST request. This is what you sent me: ${JSON.stringify(req.body)}`
-    )
+    if (req.body.isFavorite) {
+        db.run(`INSERT INTO FavoriteItems(combination) VALUES(?)`, [req.body.id], function(error) {
+            if (error) {
+                console.log(error)
+            } else {
+                res.send("# of Row Changes: " + this.changes + ". ID: " + this.id)                
+            }
+        });
+    } else {
+        db.run(`DELETE FROM FavoriteItems WHERE combination=?`, req.body.id, function(error) {
+            if (error) {
+                console.log(error)
+            } else {
+                res.send("# of Row Changes: " + this.changes + ". ID: " + this.id)
+            }
+        });        
+    }
+    
 })
 
 if (process.env.NODE_ENV === 'production') {
