@@ -7,7 +7,18 @@ body {
     width: 300px;
     border: 2px solid gray;
     display: inline-block;
+    padding: 20px;
+    border-radius: 16px;
+    margin: 16px;    
 }
 div img {
     height: 150px;
+}
+button {
+    padding: 8px;
+    border-radius: 8px;
+    background: purple;
+    border: 0;
+    color: white;
+    font-weight: bold;
 }

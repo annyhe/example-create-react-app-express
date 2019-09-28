@@ -39,7 +39,7 @@ const jackets = [
     // black military BR cotton jacket
     'https://img-static.tradesy.com/item/22306019/banana-republic-black-military-blazer-size-0-xs-0-4-960-960.jpg',
     // orange elie tahari
-    'https://di2ponv0v5otw.cloudfront.net/posts/2019/08/01/5d43c80210f00fe40b175461/m_5d43ce9a79df2723cf6ace12.jpg'
+    'https://di2ponv0v5otw.cloudfront.net/posts/2019/08/01/5d43c80210f00fe40b175461/m_5d43ce9a79df2723cf6ace12.jpg',
 ]
 const dresses = [
     // elie tahari linen dress
@@ -55,10 +55,20 @@ const tops = [
 class PantsOrDress extends Component {
     render() {
         const _div = this.props.pantsOrDress ? (
-            <div><img className="tops" src={tops[getRandom(tops.length)]} />
-            <img className="bottoms" src={bottoms[getRandom(bottoms.length)]} /></div>
+            <div>
+                <img className="tops" src={tops[getRandom(tops.length)]} />
+                <img
+                    className="bottoms"
+                    src={bottoms[getRandom(bottoms.length)]}
+                />
+            </div>
         ) : (
-            <div><img className="dresses" src={dresses[getRandom(dresses.length)]} /></div>
+            <div>
+                <img
+                    className="dresses"
+                    src={dresses[getRandom(dresses.length)]}
+                />
+            </div>
         )
 
         return { ..._div }
@@ -67,16 +77,16 @@ class PantsOrDress extends Component {
 
 class DisplayCombination extends Component {
     render() {
-        const { jackets, pantsOrDress, shoes, handbags} = this.props;
-        return <div className="imageContainer">
-        <img class="jackets" src={jackets} />
-        <PantsOrDress pantsOrDress={pantsOrDress} />
-        <img class="shoes" src={shoes} />
-        <img
-            class="handbags"
-            src={handbags}
-        />
-    </div>
+        const { jackets, pantsOrDress, shoes, handbags } = this.props
+        return (
+            <div className="imageContainer">
+                <img className="jackets" src={jackets} />
+                <PantsOrDress pantsOrDress={pantsOrDress} />
+                <img className="shoes" src={shoes} />
+                <img className="handbags" src={handbags} />
+                <button>Save combination</button>
+            </div>
+        )
     }
 }
 
@@ -85,28 +95,35 @@ export default class Closet extends Component {
         pantsOrDress: true,
     }
     togglePantsOrDress = () => {
-        this.setState({ pantsOrDress: !this.state.pantsOrDress });
+        this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
     render() {
-        // TODO: map urls to display component [ [urls1], [urls2] ]
-        let renderNum = 5
+        const { renderNum } = this.props
         const arr = []
-        let counter = renderNum;
+        // TODO: refactor this to fill up empty array with obj
+        let counter = renderNum
         while (counter > 0) {
             arr.push({
                 jackets: jackets[getRandom(jackets.length)],
                 pantsOrDress: this.state.pantsOrDress,
                 shoes: shoes[getRandom(shoes.length)],
                 handbags: handbags[getRandom(handbags.length)],
-            });
-            counter -= 1;
+            })
+            counter -= 1
         }
-        console.log(arr)
+
         return (
             <div>
                 <h1>Closet idea generation</h1>
-                <button onClick={this.togglePantsOrDress}>Change to {!this.state.pantsOrDress ? 'top and pants' : 'dress'}</button>
-                {arr.map((obj, index) => <DisplayCombination key={index} {...obj}/>)}
+                <p>
+                    <button onClick={this.togglePantsOrDress}>
+                        Change to{' '}
+                        {!this.state.pantsOrDress ? 'top and pants' : 'dress'}
+                    </button>
+                </p>
+                {arr.map((obj, index) => (
+                    <DisplayCombination key={index} {...obj} />
+                ))}
             </div>
         )
     }

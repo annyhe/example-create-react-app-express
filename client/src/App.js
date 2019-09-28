@@ -44,7 +44,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Closet />
+        <Closet renderNum={5} />
       </div>
     );
   }
