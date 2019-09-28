@@ -58,6 +58,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <button onClick={this.handleSubmit}>POST</button>
+        {this.state.responseToPost}
         <Closet {...this.state.response} renderNum={5} />
       </div>
     );

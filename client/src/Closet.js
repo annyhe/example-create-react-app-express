@@ -6,8 +6,8 @@ import './index.css'
 function getRandom(endsAt) {
     return Math.floor(Math.random() * endsAt)
 }
-const DELIMITER = '#';
-const NUM_TO_RENDER = 5;
+const DELIMITER = '#'
+const NUM_TO_RENDER = 5
 
 class PantsOrDress extends Component {
     render() {
@@ -29,16 +29,26 @@ class PantsOrDress extends Component {
 
 class DisplayCombination extends Component {
     render() {
-        const { jacket, shoes, handbag, children, name, isFavorite, toggleFavorite } = this.props;
-        let heartClass = 'heart';
-        if (isFavorite) heartClass += ' active';
+        const {
+            jacket,
+            shoes,
+            handbag,
+            children,
+            name,
+            isFavorite,
+            toggleFavorite,
+        } = this.props
+        let heartClass = 'heart'
+        if (isFavorite) heartClass += ' active'
         return (
-            <div className={"imageContainer " + name}>
+            <div className={'imageContainer ' + name}>
                 <img className="jacket" src={jacket} />
                 {children}
                 <img className="shoes" src={shoes} />
                 <img className="handbag" src={handbag} />
-                <button onClick={toggleFavorite} className={heartClass}>&#9829;</button>
+                <button onClick={toggleFavorite} className={heartClass}>
+                    &#9829;
+                </button>
             </div>
         )
     }
@@ -47,32 +57,28 @@ class DisplayCombination extends Component {
 export default class Closet extends Component {
     state = {
         pantsOrDress: true,
-        // keep track of favorites: key: true/false
         arr: [],
-        favoritesObj: {}
+        favoritesObj: {},
     }
-    componentDidUpdate(prevProps) {
-        // Typical usage (don't forget to compare props):
-        if (this.props.jacket !== prevProps.jacket && this.props.jacket) {
-          this.refreshItems();
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.jacket !== prevProps.jacket && this.props.jacket) ||
+            this.state.pantsOrDress != prevState.pantsOrDress
+        ) {
+            this.refreshItems()
         }
-      }
+    }
     refreshItems = () => {
-        const {
-            jacket,
-            shoes,
-            handbag,
-            top,
-            bottom,
-            dress,
-        } = this.props
+        const { jacket, shoes, handbag, top, bottom, dress } = this.props
         const arr = []
         // TODO: refactor this to fill up empty array with obj
-        let counter = NUM_TO_RENDER;
+        let counter = NUM_TO_RENDER
         if (!jacket) {
-            return;
+            return
         }
-        const copyFavorites = JSON.parse(JSON.stringify(this.state.favoritesObj));
+        const copyFavorites = JSON.parse(
+            JSON.stringify(this.state.favoritesObj)
+        )
         while (counter > 0) {
             const _jacket = jacket[getRandom(jacket.length)]
             const _shoes = shoes[getRandom(shoes.length)]
@@ -95,26 +101,28 @@ export default class Closet extends Component {
                 const _bottom = bottom[getRandom(bottom.length)]
                 obj.top = _top.url
                 obj.bottom = _bottom.url
-                obj.id += _top.id + DELIMITER + _bottom.id;
+                obj.id += _top.id + DELIMITER + _bottom.id
             } else {
                 const _dress = dress[getRandom(dress.length)]
                 obj.dress = _dress.url
-                obj.id += _dress.id;
+                obj.id += _dress.id
             }
 
-            arr.push(obj);
-            copyFavorites[obj.id] = false;
-            counter -= 1;
+            arr.push(obj)
+            copyFavorites[obj.id] = false
+            counter -= 1
         }
-        this.setState({arr: arr, favoritesObj: copyFavorites});
+        this.setState({ arr: arr, favoritesObj: copyFavorites })
     }
     togglePantsOrDress = () => {
         this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
-    toggleFavorite = (e) => {
-        const id = e.target.parentNode.className.split(' ')[1];
-        const copyFavorites = JSON.parse(JSON.stringify(this.state.favoritesObj));
-        copyFavorites[id] = !copyFavorites[id];
+    toggleFavorite = e => {
+        const id = e.target.parentNode.className.split(' ')[1]
+        const copyFavorites = JSON.parse(
+            JSON.stringify(this.state.favoritesObj)
+        )
+        copyFavorites[id] = !copyFavorites[id]
         this.setState({ favoritesObj: copyFavorites })
     }
     render() {
@@ -128,12 +136,13 @@ export default class Closet extends Component {
                     </button>
                 </p>
                 {this.state.arr.map((obj, index) => (
-                    <DisplayCombination 
+                    <DisplayCombination
                         isFavorite={this.state.favoritesObj[obj.id]}
-                        name={obj.id} 
-                        key={index} {...obj}
+                        name={obj.id}
+                        key={index}
+                        {...obj}
                         toggleFavorite={this.toggleFavorite}
-                        >
+                    >
                         <PantsOrDress
                             top={obj.top}
                             bottom={obj.bottom}
