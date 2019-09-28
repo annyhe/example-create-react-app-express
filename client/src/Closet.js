@@ -33,9 +33,13 @@ const handbags = [
 ]
 const jackets = [
     // black moto vest
+    'https://dtpmhvbsmffsz.cloudfront.net/posts/2017/01/27/588b7a5c2599fe6ff0008f02/s_588b7a5c2599fe6ff0008f03.jpg',
     // black linen vest
-    // black BR leather jacket
+    'https://di2ponv0v5otw.cloudfront.net/posts/2019/08/03/5d4627fdffc2d4eca713dce6/s_5d4628812eb33f136ffc6f04.jpg',
+    // black military BR cotton jacket
+    'https://img-static.tradesy.com/item/22306019/banana-republic-black-military-blazer-size-0-xs-0-4-960-960.jpg',
     // orange elie tahari
+    'https://di2ponv0v5otw.cloudfront.net/posts/2019/08/01/5d43c80210f00fe40b175461/m_5d43ce9a79df2723cf6ace12.jpg'
 ]
 const dresses = [
     // elie tahari linen dress
@@ -61,6 +65,20 @@ class PantsOrDress extends Component {
     }
 }
 
+class DisplayCombination extends Component {
+    render() {
+        const { jackets, pantsOrDress, shoes, handbags} = this.props;
+        return <div className="imageContainer">
+        <img class="jackets" src={jackets} />
+        <PantsOrDress pantsOrDress={pantsOrDress} />
+        <img class="shoes" src={shoes} />
+        <img
+            class="handbags"
+            src={handbags}
+        />
+    </div>
+    }
+}
 export default class Closet extends Component {
     state = {
         pantsOrDress: true,
@@ -69,22 +87,20 @@ export default class Closet extends Component {
         this.setState({ pantsOrDress: !this.state.pantsOrDress });
     }
     render() {
+        // TODO: map urls to display component [ [urls1], [urls2] ]
+        const obj = {
+            jackets: jackets[getRandom(jackets.length)],
+            pantsOrDress: this.state.pantsOrDress,
+            shoes: shoes[getRandom(shoes.length)],
+            handbags: handbags[getRandom(handbags.length)],
+        }
+    
         return (
             <div>
-                <h1>Closet match</h1>
-                <button>
-                    Generate matches for{' '}
-                    {this.state.pantsOrDress ? 'top and pants' : 'dress'}
-                </button>
+                <h1>Closet idea generation</h1>
                 <button onClick={this.togglePantsOrDress}>Change to {!this.state.pantsOrDress ? 'top and pants' : 'dress'}</button>
-                <div className="imageContainer">
-                    <img class="shoes" src={shoes[getRandom(shoes.length)]} />
-                    <img
-                        class="handbags"
-                        src={handbags[getRandom(handbags.length)]}
-                    />
-                    <PantsOrDress pantsOrDress={this.state.pantsOrDress} />
-                </div>
+
+                <DisplayCombination {...obj}/>
             </div>
         )
     }
