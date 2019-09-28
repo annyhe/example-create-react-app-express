@@ -3,3 +3,9 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.imageContainer {
+  width: 500px;
+}
+div img {
+  height: 150px;
+}
