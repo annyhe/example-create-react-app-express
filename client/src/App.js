@@ -11,10 +11,9 @@ class App extends Component {
     post: "",
     responseToPost: ""
   };
-
   componentDidMount() {
     this.callApi()
-      .then(res => this.setState({ response: res.express }))
+      .then(res => console.log(res.express))
       .catch(err => console.log(err));
   }
 

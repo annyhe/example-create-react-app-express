@@ -36,16 +36,18 @@ let db = new sqlite3.Database(DB_PATH, err => {
 
 // API calls
 app.get('/api/hello', (req, res) => {
-    let sql = 'SELECT id, name, brand, url, type, color FROM Items';
-    
-    db.get(sql, [], (err, row) => {
-        if (err) {
-            return console.error(err.message)
-        }
-        return row
-            ? console.log(row.id, row.name)
-            : console.log(`No playlist found with the id ${playlistId}`)
-    })
+    db.serialize(function() {
+        // let sql = 'SELECT id, name, brand, url, type, color FROM Items';
+        db.all("SELECT * FROM Items", function(err, allRows) {
+
+            if(err != null){
+                console.log(err);
+            }
+
+            res.send({express: allRows});
+            db.close();
+        });
+    });
 
     db.exec('PRAGMA foreign_keys = ON;', function(error)  {
         if (error){
@@ -55,7 +57,7 @@ app.get('/api/hello', (req, res) => {
         }
     });
 
-    res.send({ express: 'Hello From Express' })
+    // res.send({ express: 'Hello From Express' })
 })
 
 app.post('/api/world', (req, res) => {
