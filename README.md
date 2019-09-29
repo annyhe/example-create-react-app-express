@@ -6,6 +6,7 @@ tests
 - on toggle favorite: if favorited combination key was in state there AND it was true, delete it, else set to true
 
 - on toggle favorite in favorite container: should remove it
+- move pantsOrDress up: don't want to change it to always dress on showing the All page
 
 > Example on using create-react-app with a Node Express Backend
 
