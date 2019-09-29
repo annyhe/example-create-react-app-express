@@ -23,6 +23,7 @@ class App extends Component {
         post: '',
         responseToPost: '',
         currentTabIs: 'all',
+        pantsOrDress: true, // default show pants
         favorites: {}, // {combination1: true, comb2: true, ...}
     }
     componentDidMount() {
@@ -77,8 +78,16 @@ class App extends Component {
         this.setState({ favorites: copyFavorites })
     }
     setActive = e => {
-        console.log(e.target.name)
-        this.setState({ currentTabIs: e.target.name })
+        this.setState({ currentTabIs: e.target.name }, () => {
+            // use to trigger re-render
+            if (this.closet) {
+                this.closet.refreshItems()
+            }
+        })
+    }
+
+    togglePantsOrDress = () => {
+        this.setState({ pantsOrDress: !this.state.pantsOrDress })
     }
     render() {
         return (
@@ -95,6 +104,11 @@ class App extends Component {
                     />
                 ) : (
                     <Closet
+                        ref={node => {
+                            this.closet = node
+                        }}
+                        pantsOrDress={this.state.pantsOrDress}
+                        togglePantsOrDress={this.togglePantsOrDress}
                         favorites={this.state.favorites}
                         toggleFavorite={this.toggleFavorite}
                         {...this.state.response}

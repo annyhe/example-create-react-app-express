@@ -12,13 +12,12 @@ const DELIMITER = '#'
 
 export default class Closet extends Component {
     state = {
-        pantsOrDress: true,
         arr: [],
     }
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (
             (this.props.jacket !== prevProps.jacket && this.props.jacket) ||
-            this.state.pantsOrDress != prevState.pantsOrDress
+            this.props.pantsOrDress != prevProps.pantsOrDress
         ) {
             this.refreshItems()
         }
@@ -56,7 +55,7 @@ export default class Closet extends Component {
                     DELIMITER,
             }
 
-            if (this.state.pantsOrDress) {
+            if (this.props.pantsOrDress) {
                 const _top = top[getRandom(top.length)]
                 const _bottom = bottom[getRandom(bottom.length)]
                 obj.top = _top.url
@@ -80,18 +79,15 @@ export default class Closet extends Component {
 
         this.setState({ arr: arr })
     }
-    togglePantsOrDress = () => {
-        this.setState({ pantsOrDress: !this.state.pantsOrDress })
-    }
 
     render() {
         return (
             <div>
                 <h1>Closet idea generation</h1>
                 <p>
-                    <button onClick={this.togglePantsOrDress}>
+                    <button onClick={this.props.togglePantsOrDress}>
                         Change to{' '}
-                        {!this.state.pantsOrDress ? 'top and pants' : 'dress'}
+                        {!this.props.pantsOrDress ? 'top and pants' : 'dress'}
                     </button>
                 </p>
                 {this.state.arr.map((obj, index) => (

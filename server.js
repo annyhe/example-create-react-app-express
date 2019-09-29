@@ -18,17 +18,6 @@ let db = new sqlite3.Database(DB_PATH, err => {
     console.log('Connected to the ' + DB_PATH + ' SQlite database.')
 });
 
-// dbSchema = `CREATE TABLE IF NOT EXISTS FavoriteItems (
-//     id integer NOT NULL PRIMARY KEY,
-//     combination text NOT NULL UNIQUE
-// );`
-
-// db.exec(dbSchema, function(err){
-// if (err) {
-//     console.log(err)
-// }
-// });
-
 // API calls
 app.get('/api/hello', (req, res) => {
     db.serialize(function() {
