@@ -13,26 +13,32 @@ const DELIMITER = '#'
 export default class Closet extends Component {
     state = {
         pantsOrDress: true,
-        arr: []
+        arr: [],
     }
     componentDidUpdate(prevProps, prevState) {
         if (
             (this.props.jacket !== prevProps.jacket && this.props.jacket) ||
-            this.state.pantsOrDress != prevState.pantsOrDress 
-            // how to compare arrays?
-            // this.props.favorites !== prevProps.favorites
+            this.state.pantsOrDress != prevState.pantsOrDress
         ) {
             this.refreshItems()
         }
     }
     refreshItems = () => {
-        const { jacket, shoes, handbag, top, bottom, dress, renderNum } = this.props;
-        const arr = [];
-        let counter = renderNum;
+        const {
+            jacket,
+            shoes,
+            handbag,
+            top,
+            bottom,
+            dress,
+            renderNum,
+        } = this.props
+        const arr = []
+        let counter = renderNum
         if (!jacket) {
-            return;
+            return
         }
-        
+
         while (counter > 0) {
             const _jacket = jacket[getRandom(jacket.length)]
             const _shoes = shoes[getRandom(shoes.length)]
@@ -63,14 +69,16 @@ export default class Closet extends Component {
             }
 
             // only push and increment iff combination is not in favorites
-            const results = Object.keys(this.props.favorites).filter((key) => key === obj.id);
+            const results = Object.keys(this.props.favorites).filter(
+                key => key === obj.id
+            )
             if (!results.length) {
-                arr.push(obj);            
-                counter -= 1;    
+                arr.push(obj)
+                counter -= 1
             }
         }
 
-        this.setState({ arr: arr})
+        this.setState({ arr: arr })
     }
     togglePantsOrDress = () => {
         this.setState({ pantsOrDress: !this.state.pantsOrDress })

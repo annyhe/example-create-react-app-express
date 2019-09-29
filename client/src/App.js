@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import './App.css'
 import FavoriteContainer from './FavoriteContainer'
 import Closet from './Closet'
+import Navigation from './Navigation'
 
 function groupArrByType(arr) {
     const obj = {}
@@ -21,6 +22,7 @@ class App extends Component {
         response: {},
         post: '',
         responseToPost: '',
+        currentTabIs: 'all',
         favorites: {}, // {combination1: true, comb2: true, ...}
     }
     componentDidMount() {
@@ -74,22 +76,32 @@ class App extends Component {
         this.handleSubmit(id, copyFavorites[id])
         this.setState({ favorites: copyFavorites })
     }
+    setActive = e => {
+        console.log(e.target.name)
+        this.setState({ currentTabIs: e.target.name })
+    }
     render() {
         return (
             <div className="App">
-                {this.state.responseToPost}
-                <FavoriteContainer
-                    toggleFavorite={this.toggleFavorite}
-                    favorites={this.state.favorites}
-                    {...this.state.response}
-                />
-                <Closet
-                    favorites={this.state.favorites}
-                    toggleFavorite={this.toggleFavorite}
-                    {...this.state.response}
-                    renderNum={5}
-                    handleSubmit={this.handleSubmit}
-                />
+                <Navigation
+                    setActive={this.setActive}
+                    currentTabIs={this.state.currentTabIs}
+                ></Navigation>
+                {this.state.currentTabIs === 'favorite' ? (
+                    <FavoriteContainer
+                        toggleFavorite={this.toggleFavorite}
+                        favorites={this.state.favorites}
+                        {...this.state.response}
+                    />
+                ) : (
+                    <Closet
+                        favorites={this.state.favorites}
+                        toggleFavorite={this.toggleFavorite}
+                        {...this.state.response}
+                        renderNum={5}
+                        handleSubmit={this.handleSubmit}
+                    />
+                )}
             </div>
         )
     }
