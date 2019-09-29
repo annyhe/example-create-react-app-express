@@ -42,9 +42,8 @@ const FavoriteContainer = props => {
                     obj.dress = _dress.url
                 }
                 return (
-                    <div key={index}>
-                        {key}
                         <DisplayCombination
+                            key={index}
                             {...obj}
                             isFavorite={true}
                             name={key}
@@ -56,7 +55,6 @@ const FavoriteContainer = props => {
                                 dress={obj.dress}
                             />
                         </DisplayCombination>
-                    </div>
                 )
             })}
         </div>
