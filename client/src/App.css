@@ -1,0 +1,78 @@
+html {
+  background-color:#0E0E0E;
+}
+
+body {
+  font-family:helvetica, ariel, san-serif;
+  font-size:16px;
+  margin:0;
+  padding:0;
+}
+ 
+.actions {
+  border-bottom:3px solid #686868;
+  margin-bottom:20px;
+  padding:0.6em 0.7em;
+}
+
+.actions button, .actions button:active, .actions button:visited, .actions button:hover {
+  text-decoration:none;
+  color:#eee;
+  font-size: 1rem;
+  background-color:#292929;
+  padding:0.3em 0.7em;
+  margin-right:10px;
+  cursor:default;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+}
+
+.actions button.enabled {
+  color:#ffffff;
+  cursor:pointer;
+}
+
+.actions button.disabled {
+  background: gray;
+}
+.card {
+  width:100px;
+  border:1px solid #000000;
+  background-color:#ffffff;
+  padding:10px;
+  border-radius:8px;
+  -moz-border-radius:8px;
+  -webkit-border-radius:8px;
+  -moz-box-shadow:-1px 0 5px #000000;
+  -webkit-box-shadow:-1px 0 5px #000000;
+  float:left;
+  margin:0 -131px 20px 10px;
+}
+
+.clubs, .spades {
+  color:#333333;
+}
+
+.hearts, .diams {
+  color:#8A1213;
+}
+
+.card .suit {
+  text-align:center;
+  font-size:50px;
+  height:70px;
+  line-height:70px;
+}
+
+.card .bottom_suit {
+  text-align:right;
+}
+
+.card .bottom_rank {
+  text-align:right;
+}
+
+#cards {
+  margin-right:110px
+}

@@ -1,5 +1,7 @@
 # create-react-app React Project with Node Express Backend
 
+Card deck inspired by this [Codepen](https://codepen.io/jonrohan/pen/vOEJMy?editors=0010)
+
 > Example on using create-react-app with a Node Express Backend
 
 ## Usage
