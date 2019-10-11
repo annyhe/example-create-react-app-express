@@ -4,12 +4,12 @@ import "./App.css";
 
 const shuffle = arr => {
   const copyArr = [...arr];
-  for (var i = 0; i < copyArr.length; i++) {
-    var j = i;
+  for (let i = 0; i < copyArr.length; i++) {
+    let j = i;
     while (j === i) {
       j = Math.floor(Math.random() * copyArr.length);
     }
-    var tmp = copyArr[i];
+    let tmp = copyArr[i];
     copyArr[i] = copyArr[j];
     copyArr[j] = tmp;
   }
